@@ -1,0 +1,14 @@
+../Core/Inc/support.h:23:20:nRF24_CE_L	8	static
+../Core/Inc/support.h:27:20:nRF24_CE_H	8	static
+../Core/Inc/support.h:31:20:nRF24_CSN_L	8	static
+../Core/Inc/support.h:35:20:nRF24_CSN_H	8	static
+../Core/Src/main.c:68:5:main	128	static
+../Core/Src/main.c:169:6:SystemClock_Config	96	static
+../Core/Src/main.c:220:13:MX_SPI1_Init	8	static
+../Core/Src/main.c:260:13:MX_GPIO_Init	32	static
+../Core/Src/main.c:284:6:nRF24_set_up	24	static
+../Core/Src/main.c:329:6:nRF24_Switch_to_RX_mode	8	static
+../Core/Src/main.c:339:17:RECEIVED_DATA	16	static
+../Core/Src/main.c:348:6:nRF24_Switch_to_TX_mode	8	static
+../Core/Src/main.c:357:6:nRF24_start_sending	16	static
+../Core/Src/main.c:371:6:Error_Handler	4	static,ignoring_inline_asm

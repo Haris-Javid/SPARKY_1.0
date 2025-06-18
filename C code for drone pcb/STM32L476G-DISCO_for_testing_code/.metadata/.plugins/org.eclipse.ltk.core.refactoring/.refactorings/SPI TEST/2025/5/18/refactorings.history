@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;SPI TEST/Core/Inc/nrf24&apos; to &apos;nrf24.h&apos;" description="Rename resource &apos;nrf24&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Core/Inc/nrf24" name="nrf24.h" stamp="1746283684164" updateReferences="true"/>
+</session>

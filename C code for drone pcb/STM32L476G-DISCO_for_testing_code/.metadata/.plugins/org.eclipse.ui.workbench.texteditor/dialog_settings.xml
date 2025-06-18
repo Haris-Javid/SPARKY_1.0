@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item key="selection" value="nRF24_SetAddr"/>
+		<item key="wrap" value="true"/>
+		<item key="casesensitive" value="false"/>
+		<item key="wholeword" value="false"/>
+		<item key="incremental" value="false"/>
+		<item key="isRegEx" value="false"/>
+		<list key="findhistory">
+			<item value="nRF24_SetAddr"/>
+			<item value="txaddr"/>
+			<item value="tx"/>
+			<item value="  NRF24_RX_NO_DATA"/>
+			<item value="nRF24_check_for_data_nonblocking"/>
+			<item value="nRF24_REG_SETUP_AW"/>
+			<item value="nRF24_REG_TX_ADDR "/>
+			<item value="PAYLOAD_SIZE"/>
+			<item value=" nRF24_SetRXPipe"/>
+			<item value="ARC"/>
+			<item value="attempts"/>
+			<item value="data_rate"/>
+			<item value="setrf"/>
+			<item value="setADDRwidth"/>
+			<item value="nRF24_Init"/>
+		</list>
+		<list key="replacehistory">
+			<item value="NO_DATA"/>
+			<item value="RECEIVED_DATA"/>
+			<item value=""/>
+		</list>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="915"/>
+		<item key="DIALOG_Y_ORIGIN" value="135"/>
+		<item key="DIALOG_WIDTH" value="322"/>
+		<item key="DIALOG_HEIGHT" value="390"/>
+		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
+	</section>
+</section>

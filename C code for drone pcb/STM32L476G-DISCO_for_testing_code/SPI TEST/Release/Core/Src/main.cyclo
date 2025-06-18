@@ -1,0 +1,8 @@
+../Core/Src/main.c:169:6:SystemClock_Config	4
+../Core/Src/main.c:284:6:nRF24_set_up	1
+../Core/Src/main.c:329:6:nRF24_Switch_to_RX_mode	1
+../Core/Src/main.c:339:17:RECEIVED_DATA	2
+../Core/Src/main.c:348:6:nRF24_Switch_to_TX_mode	1
+../Core/Src/main.c:357:6:nRF24_start_sending	1
+../Core/Src/main.c:68:5:main	5
+../Core/Src/main.c:371:6:Error_Handler	1
