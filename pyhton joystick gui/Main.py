@@ -142,14 +142,46 @@ def handle_key_events():
     
     if dpg.is_key_pressed(dpg.mvKey_W):
         print('w pressed')
-        throttle_pos[0][1]-=5
-        throttle_pos[1][1]-=5
-        print(throttle_pos)
-         #converting power as a 0-100 percentage
-        normalized_throttle_output = (1-(((throttle_pos[0][1]+throttle_pos[1][1]/2)-400) / (750-400)))*100     
+
+        if(throttle_pos[0][1]>375):
+            throttle_pos[0][1]-=10
+            throttle_pos[1][1]-=10
+    
+  
+    if dpg.is_key_pressed(dpg.mvKey_S):
+        print('s pressed')
+
+        if(throttle_pos[1][1]<775):
+            throttle_pos[0][1]+=10
+            throttle_pos[1][1]+=10
+
+    if dpg.is_key_pressed(dpg.mvKey_1):
+        throttle_pos[0][1]=725
+        throttle_pos[1][1]=775
+
+    if dpg.is_key_pressed(dpg.mvKey_2):
+        throttle_pos[0][1]=637.5
+        throttle_pos[1][1]=687.5    
+
+    if dpg.is_key_pressed(dpg.mvKey_3):
+        throttle_pos[0][1]=550
+        throttle_pos[1][1]=600
+   
+    if dpg.is_key_pressed(dpg.mvKey_4):
+        throttle_pos[0][1]=462
+        throttle_pos[1][1]=512
+       
+
+    if dpg.is_key_pressed(dpg.mvKey_5):
+        throttle_pos[0][1]=375
+        throttle_pos[1][1]=425 
+    
+    #converting power as a 0-100 percentage
+    normalized_throttle_output = (1-(abs(((throttle_pos[0][1]+throttle_pos[1][1])/2)-400) / (750-400)))*100  
+       
 
         #update display
-        dpg.set_value("Y_OUT_Throttle", f"Power: {int(normalized_throttle_output)} %")
+    dpg.set_value("Y_OUT_Throttle", f"Power: {int(normalized_throttle_output)} %")
 
 # Initialize
 dpg.create_context()
