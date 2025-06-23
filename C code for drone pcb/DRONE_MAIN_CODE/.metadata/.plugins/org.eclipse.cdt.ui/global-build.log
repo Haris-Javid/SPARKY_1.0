@@ -1,0 +1,25 @@
+21:43:32 **** Incremental Build of configuration Debug for project DRONE_MAIN_CODE ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F411xE -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:113:12: warning: variable 'received_SPI_data' set but not used [-Wunused-but-set-variable]
+  113 |    uint8_t received_SPI_data[12]= {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+      |            ^~~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "DRONE_MAIN_CODE.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\haris\OneDrive\Desktop\DRONE PROJECT PCB\drone drivers\C code for drone pcb\DRONE_MAIN_CODE\DRONE_MAIN_CODE\STM32F411CEUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="DRONE_MAIN_CODE.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: DRONE_MAIN_CODE.elf
+ 
+arm-none-eabi-size  DRONE_MAIN_CODE.elf 
+arm-none-eabi-objdump -h -S DRONE_MAIN_CODE.elf  > "DRONE_MAIN_CODE.list"
+   text	   data	    bss	    dec	    hex	filename
+   9740	     12	   1660	  11412	   2c94	DRONE_MAIN_CODE.elf
+Finished building: default.size.stdout
+ 
+Finished building: DRONE_MAIN_CODE.list
+ 
+21:43:44 **** Incremental Build of configuration Debug for project DRONE_MAIN_CODE ****
+make -j16 all 
+arm-none-eabi-size  DRONE_MAIN_CODE.elf 
+   text	   data	    bss	    dec	    hex	filename
+   9740	     12	   1660	  11412	   2c94	DRONE_MAIN_CODE.elf
+Finished building: default.size.stdout
+ 

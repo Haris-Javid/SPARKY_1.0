@@ -1,0 +1,10 @@
+21:43:44 **** Incremental Build of configuration Debug for project DRONE_MAIN_CODE ****
+make -j16 all 
+arm-none-eabi-size  DRONE_MAIN_CODE.elf 
+   text	   data	    bss	    dec	    hex	filename
+   9740	     12	   1660	  11412	   2c94	DRONE_MAIN_CODE.elf
+Finished building: default.size.stdout
+ 
+
+21:43:45 Build Finished. 0 errors, 0 warnings. (took 349ms)
+
