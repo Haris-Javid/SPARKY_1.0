@@ -1,0 +1,574 @@
+/* USER CODE BEGIN Header */
+/**
+  ******************************************************************************
+  * @file           : main.c
+  * @brief          : Main program body
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2025 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
+/* USER CODE END Header */
+/* Includes ------------------------------------------------------------------*/
+#include "main.h"
+
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
+#include "nrf24.h"
+/* USER CODE END Includes */
+
+/* Private typedef -----------------------------------------------------------*/
+/* USER CODE BEGIN PTD */
+
+/* USER CODE END PTD */
+
+/* Private define ------------------------------------------------------------*/
+/* USER CODE BEGIN PD */
+
+/* USER CODE END PD */
+
+/* Private macro -------------------------------------------------------------*/
+/* USER CODE BEGIN PM */
+
+/* USER CODE END PM */
+
+/* Private variables ---------------------------------------------------------*/
+RTC_HandleTypeDef hrtc;
+
+SPI_HandleTypeDef hspi1;
+
+TIM_HandleTypeDef htim2;
+
+/* USER CODE BEGIN PV */
+
+/* USER CODE END PV */
+
+/* Private function prototypes -----------------------------------------------*/
+void SystemClock_Config(void);
+static void MX_GPIO_Init(void);
+static void MX_SPI1_Init(void);
+static void MX_TIM2_Init(void);
+static void MX_RTC_Init(void);
+/* USER CODE BEGIN PFP */
+void nRF24_set_up(uint8_t width, uint8_t channel, uint8_t data_rate, uint8_t power_level, uint8_t CRC_mode, uint8_t delay, uint8_t attempts, uint8_t rx_pipe, uint8_t *addr, uint8_t AA_state, uint8_t payload_size);
+void nRF24_start_sending(uint8_t *data, uint8_t length);
+/* USER CODE END PFP */
+
+/* Private user code ---------------------------------------------------------*/
+/* USER CODE BEGIN 0 */
+
+/* USER CODE END 0 */
+
+/**
+  * @brief  The application entry point.
+  * @retval int
+  */
+int main(void)
+{
+
+  /* USER CODE BEGIN 1 */
+
+  /* USER CODE END 1 */
+
+  /* MCU Configuration--------------------------------------------------------*/
+
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  HAL_Init();
+
+  /* USER CODE BEGIN Init */
+
+  /* USER CODE END Init */
+
+  /* Configure the system clock */
+  SystemClock_Config();
+
+  /* USER CODE BEGIN SysInit */
+
+  /* USER CODE END SysInit */
+
+  /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  MX_SPI1_Init();
+  MX_TIM2_Init();
+  MX_RTC_Init();
+  /* USER CODE BEGIN 2 */
+  uint8_t addr[5] = {'D', 'R', 'O', 'N', 'E'};
+  nRF24_set_up(5, 78, nRF24_DR_1Mbps, nRF24_TXPWR_0dBm, nRF24_CRC_2byte, nRF24_ARD_1500us, 5 , nRF24_PIPE0, addr,nRF24_AA_ON  , 16);
+
+
+  uint8_t send_SPI_data[12] =  {
+ 		    0x00, // CONFIG
+ 		    0x01, // EN_AA
+ 		    0x02, // EN_RXADDR
+ 		    0x03, // SETUP_AW
+ 		    0x04, // SETUP_RETR
+ 		    0x05, // RF_CH
+ 		    0x06, // RF_SETUP
+ 		    0x07, // STATUS
+ 		    0x08, // OBSERVE_TX
+ 		    0x09, // RPD
+ 		    0x0A, // RX_ADDR_P0 (first byte)
+ 		    0x10, // TX_ADDR (first byte)
+ 			};
+   uint8_t received_SPI_data[12]= {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+   uint8_t test_data[]= "hi this is drone";
+   nRF24_start_sending(test_data, 16);
+
+       for(int x=0; x<12;x++){
+           uint8_t tx_buf[2] = { send_SPI_data[x], 0xFF };  // Command and dummy byte
+           uint8_t rx_buf[2] = {0};
+           nRF24_CSN_L();
+           HAL_Delay(1);
+           HAL_SPI_TransmitReceive(&hspi1, tx_buf, rx_buf, 2, 200);
+       	nRF24_CSN_H();
+       	received_SPI_data[x] = rx_buf[1];
+       }
+
+       RTC_TimeTypeDef sTime = {0};
+       RTC_TimeTypeDef t_start = {0};
+       RTC_TimeTypeDef t_now = {0};
+       RTC_DateTypeDef current_date = {0};
+       uint32_t now_seconds = 0;
+       HAL_RTC_GetTime(&hrtc, &t_start, RTC_FORMAT_BIN);
+       HAL_RTC_GetDate(&hrtc, &current_date, RTC_FORMAT_BIN);
+
+  /*
+
+  uint8_t send_spi_reg_addr = {0x06};
+  uint8_t rec_spi_id_data = {0};
+  nRF24_CSN_L();
+  HAL_Delay(1);
+  HAL_SPI_Transmit(&hspi1, &send_spi_reg_addr, 1, 200);
+  HAL_SPI_Receive(&hspi1, &rec_spi_id_data, 1, 200);
+  nRF24_CSN_H();*/
+
+
+  /* USER CODE END 2 */
+
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+
+
+  while (1)
+  {
+
+	  nRF24_start_sending(test_data, 16);
+	 	    for(int x=0; x<12;x++){
+	 	        uint8_t tx_buf[2] = { send_SPI_data[x], 0xFF };  // Command and dummy byte
+	 	        uint8_t rx_buf[2] = { 0 };
+	 	        nRF24_CSN_L();
+	 	        HAL_Delay(1);
+	 	        HAL_SPI_TransmitReceive(&hspi1, tx_buf, rx_buf, 2, 200);
+	 	    	nRF24_CSN_H();
+	 	    	received_SPI_data[x] = rx_buf[1];
+	 	    }
+	 //HAL_RTC_GetTime(&hrtc, &t_now, RTC_FORMAT_BIN);
+	 //now_seconds = t_now.Hours * 3600 + t_now.Minutes * 60 + t_now.Seconds;
+	 //HAL_GPIO_TogglePin(RED_LED_GPIO_Port, RED_LED_Pin); // Toggle the LED
+
+
+	     static uint32_t last_seconds = 0;
+	       HAL_RTC_GetTime(&hrtc, &t_now, RTC_FORMAT_BIN);
+	       now_seconds = t_now.Hours * 3600 + t_now.Minutes * 60 + t_now.Seconds;
+	       uint32_t rtc_cr = RTC->CR;
+	       uint32_t rtc_isr = RTC->ISR;
+	       if (now_seconds != last_seconds) {
+	           last_seconds = now_seconds;
+	           HAL_GPIO_TogglePin(RED_LED_GPIO_Port, RED_LED_Pin); // Blink LED every second
+	       }
+
+	 HAL_Delay(500); // Delay 500 ms
+    /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
+  }
+  /* USER CODE END 3 */
+}
+
+/**
+  * @brief System Clock Configuration
+  * @retval None
+  */
+void SystemClock_Config(void)
+{
+  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+
+  /** Configure the main internal regulator output voltage
+  */
+  __HAL_RCC_PWR_CLK_ENABLE();
+  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+
+  /** Initializes the RCC Oscillators according to the specified parameters
+  * in the RCC_OscInitTypeDef structure.
+  */
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI|RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Initializes the CPU, AHB and APB buses clocks
+  */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSE;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+  {
+    Error_Handler();
+  }
+}
+
+/**
+  * @brief RTC Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_RTC_Init(void)
+{
+
+  /* USER CODE BEGIN RTC_Init 0 */
+	__HAL_RCC_PWR_CLK_ENABLE();
+	HAL_PWR_EnableBkUpAccess();
+	/* Reset Backup Domain */
+	__HAL_RCC_BACKUPRESET_FORCE();
+   __HAL_RCC_BACKUPRESET_RELEASE();
+
+	  /* Enable RTC clock */
+	__HAL_RCC_RTC_ENABLE();
+
+	  /* Configure RTC clock source */
+	__HAL_RCC_RTC_CONFIG(RCC_RTCCLKSOURCE_LSI);
+  /* USER CODE END RTC_Init 0 */
+
+  RTC_TimeTypeDef sTime = {0};
+  RTC_DateTypeDef sDate = {0};
+
+  /* USER CODE BEGIN RTC_Init 1 */
+
+  /* USER CODE END RTC_Init 1 */
+
+  /** Initialize RTC Only
+  */
+  hrtc.Instance = RTC;
+  hrtc.Init.HourFormat = RTC_HOURFORMAT_24;
+  hrtc.Init.AsynchPrediv = 127;
+  hrtc.Init.SynchPrediv = 255;
+  hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
+  hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
+  hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
+  if (HAL_RTC_Init(&hrtc) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /* USER CODE BEGIN Check_RTC_BKUP */
+  if (HAL_RTC_Init(&hrtc) != HAL_OK) {
+    Error_Handler();
+  }
+
+  uint32_t timeout = 1000; // 1s timeout
+  while(!(RTC->ISR & RTC_ISR_RSF) && --timeout);
+  if(timeout == 0) Error_Handler();
+  /* USER CODE END Check_RTC_BKUP */
+
+  /** Initialize RTC and set the Time and Date
+  */
+
+  if(HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR0) != 0x32F1){
+  sTime.Hours = 0;
+  sTime.Minutes = 0;
+  sTime.Seconds = 0;
+  sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+  sTime.StoreOperation = RTC_STOREOPERATION_RESET;
+  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sDate.WeekDay = RTC_WEEKDAY_SUNDAY;
+  sDate.Month = RTC_MONTH_JUNE;
+  sDate.Date = 22;
+  sDate.Year = 25;
+
+  if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN RTC_Init 2 */
+
+  /* USER CODE END RTC_Init 2 */
+
+}
+
+/**
+  * @brief SPI1 Initialization Function
+  * @param None
+  * @retval None
+  */
+  static void MX_RTC_Init(void)
+  {
+      __HAL_RCC_PWR_CLK_ENABLE();
+      HAL_PWR_EnableBkUpAccess();
+
+      __HAL_RCC_BACKUPRESET_FORCE();
+      __HAL_RCC_BACKUPRESET_RELEASE();
+
+      __HAL_RCC_LSI_ENABLE();
+      while(__HAL_RCC_GET_FLAG(RCC_FLAG_LSIRDY) == RESET); // Wait for LSI ready
+
+      __HAL_RCC_RTC_CONFIG(RCC_RTCCLKSOURCE_LSI);
+      __HAL_RCC_RTC_ENABLE();
+
+      RTC_TimeTypeDef sTime = {0};
+      RTC_DateTypeDef sDate = {0};
+
+      hrtc.Instance = RTC;
+      hrtc.Init.HourFormat = RTC_HOURFORMAT_24;
+      hrtc.Init.AsynchPrediv = 127;
+      hrtc.Init.SynchPrediv = 255;
+      hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
+      hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
+      hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
+      if (HAL_RTC_Init(&hrtc) != HAL_OK) {
+          Error_Handler();
+      }
+
+      // Clear RSF and wait until it is set
+      RTC->ISR &= ~RTC_ISR_RSF;
+      uint32_t timeout = 10000;
+      while (!(RTC->ISR & RTC_ISR_RSF) && --timeout);
+      if (timeout == 0) Error_Handler();
+
+      if(HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR0) != 0x32F1){
+          sTime.Hours = 0;
+          sTime.Minutes = 0;
+          sTime.Seconds = 0;
+          HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
+
+          sDate.WeekDay = RTC_WEEKDAY_SUNDAY;
+          sDate.Month = RTC_MONTH_JUNE;
+          sDate.Date = 22;
+          sDate.Year = 25;
+          HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
+
+          HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR0, 0x32F1);
+      }
+  }
+
+/**
+  * @brief TIM2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM2_Init(void)
+{
+
+  /* USER CODE BEGIN TIM2_Init 0 */
+
+  /* USER CODE END TIM2_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM2_Init 1 */
+
+  /* USER CODE END TIM2_Init 1 */
+  htim2.Instance = TIM2;
+  htim2.Init.Prescaler = 0;
+  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim2.Init.Period = 4294967295;
+  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM2_Init 2 */
+
+  /* USER CODE END TIM2_Init 2 */
+
+}
+
+/**
+  * @brief GPIO Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_GPIO_Init(void)
+{
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+/* USER CODE BEGIN MX_GPIO_Init_1 */
+/* USER CODE END MX_GPIO_Init_1 */
+
+  /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOH_CLK_ENABLE();
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(SPI_CSN_GPIO_Port, SPI_CSN_Pin, GPIO_PIN_SET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(CE_GPIO_Port, CE_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(RED_LED_GPIO_Port, RED_LED_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pins : SPI_CSN_Pin RED_LED_Pin */
+  GPIO_InitStruct.Pin = SPI_CSN_Pin|RED_LED_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : CE_Pin */
+  GPIO_InitStruct.Pin = CE_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(CE_GPIO_Port, &GPIO_InitStruct);
+
+/* USER CODE BEGIN MX_GPIO_Init_2 */
+/* USER CODE END MX_GPIO_Init_2 */
+}
+
+/* USER CODE BEGIN 4 */
+void nRF24_set_up(uint8_t width, uint8_t channel, uint8_t data_rate, uint8_t power_level, uint8_t CRC_mode, uint8_t delay, uint8_t attempts, uint8_t rx_pipe, uint8_t *addr, uint8_t AA_state, uint8_t payload_size)
+{
+    // Set the address width (3, 4, or 5 bytes)
+    nRF24_SetAddrWidth(width); // Recommended: 5-byte address width
+
+    // Set the RF channel for communication (channel 0-125)
+    nRF24_SetRFChannel(channel); // Set the channel (0-125)
+
+    // Set the data rate (250kbps, 1Mbps, or 2Mbps)
+    nRF24_SetDataRate(data_rate); // Set the data rate
+
+    // Set the TX power level (available options depend on module, usually -18dBm to +3dBm)
+    nRF24_SetTXPower(power_level); // Set the transmission power level
+
+    // Set CRC mode (disable, 1-byte CRC, or 2-byte CRC)
+    nRF24_SetCRCScheme(CRC_mode); // Set CRC scheme (disabled, CRC-1, or CRC-2)
+
+    // Set auto-retransmit delay (ARD) and attempts (ARC)
+    nRF24_SetAutoRetr(delay, attempts); // Configure retransmit delay and number of attempts (0-15)
+
+    // Set the TX pipe address (used for transmission)
+    nRF24_SetTXAddr(addr); // Set the TX pipe address
+
+    // Set the RX pipe address (must match the TX address for auto acknowledgment)
+    nRF24_SetAddr(rx_pipe, addr); // Set the RX pipe address (should match TX address)
+
+    // Enable AA (Auto Acknowledgment) for the specified RX pipe
+    nRF24_EnableAA(rx_pipe); // Enable AA on the given RX pipe (0-5)
+
+    // Set the RX pipe with AA state (enabled/disabled) and payload size (1-32 bytes)
+    nRF24_SetRXPipe(rx_pipe, AA_state, payload_size); // Configure RX pipe with AA and payload size
+
+    nRF24_DisableAA(nRF24_PIPE1);
+
+    nRF24_DisableAA(nRF24_PIPE2);
+
+  	nRF24_DisableAA(nRF24_PIPE3);
+
+    nRF24_DisableAA(nRF24_PIPE4);
+
+    nRF24_DisableAA(nRF24_PIPE5);
+
+    nRF24_SetPowerMode(nRF24_PWR_UP); // powering up module so that it can stay in standby-1 mode
+    }
+
+void nRF24_Switch_to_RX_mode(){      // set nrf24 into rx mode
+	 nRF24_SetOperationalMode(nRF24_MODE_RX);
+	 nRF24_CE_H();
+};
+
+typedef enum {
+  NO_DATA,
+  RX_RECEIVED
+} nRF24_RX_Status;
+
+nRF24_RX_Status RECEIVED_DATA(uint8_t *buffer, uint8_t *length) {   // this function checks for latest rx data and loads it into buffer and sets status.
+    if (nRF24_GetStatus_RXFIFO() != nRF24_STATUS_RXFIFO_EMPTY) {
+        nRF24_ReadPayload(buffer, length);
+        nRF24_ClearIRQFlags();
+        return RX_RECEIVED;
+    }
+    return NO_DATA;
+}
+
+void nRF24_Switch_to_TX_mode(){
+	 nRF24_SetOperationalMode(nRF24_MODE_TX);
+	 nRF24_CE_H();
+	 HAL_Delay(1);// TX_15us_delay() // Needs to be at least 10 μs
+};
+
+
+
+void nRF24_start_sending(uint8_t *data, uint8_t length) {
+        nRF24_FlushTX();
+        nRF24_ClearIRQFlags();
+        nRF24_WritePayload(data, length);
+        nRF24_Switch_to_TX_mode();
+    }
+
+
+
+/* USER CODE END 4 */
+
+/**
+  * @brief  This function is executed in case of error occurrence.
+  * @retval None
+  */
+void Error_Handler(void)
+{
+  /* USER CODE BEGIN Error_Handler_Debug */
+  /* User can add his own implementation to report the HAL error return state */
+  __disable_irq();
+  while (1)
+  {
+  }
+  /* USER CODE END Error_Handler_Debug */
+}
+
+#ifdef  USE_FULL_ASSERT
+/**
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
+  */
+void assert_failed(uint8_t *file, uint32_t line)
+{
+  /* USER CODE BEGIN 6 */
+  /* User can add his own implementation to report the file name and line number,
+     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  /* USER CODE END 6 */
+}
+#endif /* USE_FULL_ASSERT */

@@ -6,8 +6,13 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="SPI_CSN_Pin"/>
+		<item key="selection" value=""/>
 		<list key="findhistory">
+			<item value="TIM5_IRQHandler(void)"/>
+			<item value="hal_tim_period"/>
+			<item value="SystemClock"/>
+			<item value="sTime.Hours = 12"/>
+			<item value="sTime.Hours = 12;"/>
 			<item value="NRF_CSN_Pin"/>
 			<item value="NRF_CSN_GPIO_Port"/>
 			<item value="NRF_CE_Pin"/>

@@ -117,7 +117,7 @@ void setup() {
   radio.begin();
   radio.setAddressWidth(5);
   radio.setAutoAck(true); 
-  radio.setPayloadSize(16);  // Match STM32's payload size
+  radio.setPayloadSize(10);  // Match STM32's payload size
   radio.setRetries(5, 5);   // 5 retries, 1500µs delay (0x15)
   radio.setAutoAck(0, true);  // Enable AA only on pipe 0
   radio.setAutoAck(1, false); // Disable on other pipes
