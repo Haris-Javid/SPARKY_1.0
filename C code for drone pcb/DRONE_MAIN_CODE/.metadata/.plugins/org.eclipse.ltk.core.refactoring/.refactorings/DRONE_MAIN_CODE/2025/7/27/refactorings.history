@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;DRONE_MAIN_CODE/Core/Src/FUNCTIONS.C&apos; to &apos;NRF24_DRIVERS.C&apos;" description="Rename resource &apos;FUNCTIONS.C&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Core/Src/FUNCTIONS.C" name="NRF24_DRIVERS.C" stamp="1751353674747" updateReferences="true"/>&#x0A;<refactoring comment="Rename resource &apos;DRONE_MAIN_CODE/Core/Inc/FUNCTIONS.H&apos; to &apos;NRF24_DRIVERS.H&apos;" description="Rename resource &apos;FUNCTIONS.H&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Core/Inc/FUNCTIONS.H" name="NRF24_DRIVERS.H" stamp="1751353699104" updateReferences="true"/>
+</session>

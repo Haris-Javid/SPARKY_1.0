@@ -22,6 +22,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "nrf24.h"
+#include "NRF24_DRIVERS.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -58,8 +59,7 @@ static void MX_TIM2_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_TIM5_Init(void);
 /* USER CODE BEGIN PFP */
-void nRF24_set_up(uint8_t width, uint8_t channel, uint8_t data_rate, uint8_t power_level, uint8_t CRC_mode, uint8_t delay, uint8_t attempts, uint8_t rx_pipe, uint8_t *addr, uint8_t AA_state, uint8_t payload_size);
-void nRF24_start_sending(uint8_t *data, uint8_t length);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -108,50 +108,20 @@ int main(void)
   nRF24_set_up(5, 78, nRF24_DR_1Mbps, nRF24_TXPWR_0dBm, nRF24_CRC_2byte, nRF24_ARD_1500us, 5 , nRF24_PIPE0, addr,nRF24_AA_ON  , 10);
 
 
-  uint8_t send_SPI_data[12] =  {
- 		    0x00, // CONFIG
- 		    0x01, // EN_AA
- 		    0x02, // EN_RXADDR
- 		    0x03, // SETUP_AW
- 		    0x04, // SETUP_RETR
- 		    0x05, // RF_CH
- 		    0x06, // RF_SETUP
- 		    0x07, // STATUS
- 		    0x08, // OBSERVE_TX
- 		    0x09, // RPD
- 		    0x0A, // RX_ADDR_P0 (first byte)
- 		    0x10, // TX_ADDR (first byte)
- 			};
-   uint8_t received_SPI_data[12]= {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
-   uint8_t test_data[]= "hi this is drone";
-   nRF24_start_sending(test_data, 10);
+   uint8_t received_SPI_data[13]= {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 
-       for(int x=0; x<12;x++){
-           uint8_t tx_buf[2] = { send_SPI_data[x], 0xFF };  // Command and dummy byte
-           uint8_t rx_buf[2] = {0};
-           nRF24_CSN_L();
-           HAL_Delay(1);
-           HAL_SPI_TransmitReceive(&hspi1, tx_buf, rx_buf, 2, 200);
-       	nRF24_CSN_H();
-       	received_SPI_data[x] = rx_buf[1];
-       }
+   uint8_t buffer_rec[32];
+   uint8_t length = 10;
+  nRF24_Switch_to_RX_mode();
+  //  uint8_t test_data[]= "hi this is drone";
+  // nRF24_start_sending(test_data, 10);
+   nRF24_ClearIRQFlags(); // Properly clear interrupts
+   RECEIVED_DATA(buffer_rec, &length);
 
 
-       uint32_t now_seconds = 0;
-       uint32_t next_seconds = 0;
-       char time_str[9];
-
-
-  /*
-
-  uint8_t send_spi_reg_addr = {0x06};
-  uint8_t rec_spi_id_data = {0};
-  nRF24_CSN_L();
-  HAL_Delay(1);
-  HAL_SPI_Transmit(&hspi1, &send_spi_reg_addr, 1, 200);
-  HAL_SPI_Receive(&hspi1, &rec_spi_id_data, 1, 200);
-  nRF24_CSN_H();*/
-
+    uint32_t now_seconds = 0;
+    uint32_t next_seconds = 0;
+    char time_str[9];
 
   /* USER CODE END 2 */
 
@@ -160,25 +130,24 @@ int main(void)
   while (1)
   {
 
-	  /*nRF24_start_sending(test_data, 16);
-	 	    for(int x=0; x<12;x++){
-	 	        uint8_t tx_buf[2] = { send_SPI_data[x], 0xFF };  // Command and dummy byte
-	 	        uint8_t rx_buf[2] = { 0 };
-	 	        nRF24_CSN_L();
-	 	        HAL_Delay(1);
-	 	        HAL_SPI_TransmitReceive(&hspi1, tx_buf, rx_buf, 2, 200);
-	 	    	nRF24_CSN_H();
-	 	    	received_SPI_data[x] = rx_buf[1];
-	 	    }*/
+	   get_nrf24_reg_values(received_SPI_data);
 
+	 // nRF24_start_sending(test_data, 10);
+	 	   HAL_Delay(1);
+	 	   if(RECEIVED_DATA(buffer_rec, &length) == RX_RECEIVED){
+	 	   		  HAL_GPIO_TogglePin(RED_LED_GPIO_Port, RED_LED_Pin);
+	 	   	  }
 	 now_seconds = 0;
 
-	 HAL_GPIO_TogglePin(RED_LED_GPIO_Port, RED_LED_Pin); // Toggle the LED
 
-	 sprintf(time_str, "%02lu:", count/20000);
+
+
+	// HAL_GPIO_TogglePin(RED_LED_GPIO_Port, RED_LED_Pin); // Toggle the LED
+
+	 //sprintf(time_str, "%02lu:", count/20000);
 	 //nRF24_start_sending(test_data, 10);
 	// HAL_Delay(500); // Delay 500 ms
-     nRF24_start_sending(time_str, 10);
+    // nRF24_start_sending(time_str, 10);
 
 
 	 HAL_Delay(500); // Delay 500 ms
@@ -457,88 +426,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 	}
 
 }
-
-
-
-void nRF24_set_up(uint8_t width, uint8_t channel, uint8_t data_rate, uint8_t power_level, uint8_t CRC_mode, uint8_t delay, uint8_t attempts, uint8_t rx_pipe, uint8_t *addr, uint8_t AA_state, uint8_t payload_size)
-{
-    // Set the address width (3, 4, or 5 bytes)
-    nRF24_SetAddrWidth(width); // Recommended: 5-byte address width
-
-    // Set the RF channel for communication (channel 0-125)
-    nRF24_SetRFChannel(channel); // Set the channel (0-125)
-
-    // Set the data rate (250kbps, 1Mbps, or 2Mbps)
-    nRF24_SetDataRate(data_rate); // Set the data rate
-
-    // Set the TX power level (available options depend on module, usually -18dBm to +3dBm)
-    nRF24_SetTXPower(power_level); // Set the transmission power level
-
-    // Set CRC mode (disable, 1-byte CRC, or 2-byte CRC)
-    nRF24_SetCRCScheme(CRC_mode); // Set CRC scheme (disabled, CRC-1, or CRC-2)
-
-    // Set auto-retransmit delay (ARD) and attempts (ARC)
-    nRF24_SetAutoRetr(delay, attempts); // Configure retransmit delay and number of attempts (0-15)
-
-    // Set the TX pipe address (used for transmission)
-    nRF24_SetTXAddr(addr); // Set the TX pipe address
-
-    // Set the RX pipe address (must match the TX address for auto acknowledgment)
-    nRF24_SetAddr(rx_pipe, addr); // Set the RX pipe address (should match TX address)
-
-    // Enable AA (Auto Acknowledgment) for the specified RX pipe
-    nRF24_EnableAA(rx_pipe); // Enable AA on the given RX pipe (0-5)
-
-    // Set the RX pipe with AA state (enabled/disabled) and payload size (1-32 bytes)
-    nRF24_SetRXPipe(rx_pipe, AA_state, payload_size); // Configure RX pipe with AA and payload size
-
-    nRF24_DisableAA(nRF24_PIPE1);
-
-    nRF24_DisableAA(nRF24_PIPE2);
-
-  	nRF24_DisableAA(nRF24_PIPE3);
-
-    nRF24_DisableAA(nRF24_PIPE4);
-
-    nRF24_DisableAA(nRF24_PIPE5);
-
-    nRF24_SetPowerMode(nRF24_PWR_UP); // powering up module so that it can stay in standby-1 mode
-    }
-
-void nRF24_Switch_to_RX_mode(){      // set nrf24 into rx mode
-	 nRF24_SetOperationalMode(nRF24_MODE_RX);
-	 nRF24_CE_H();
-};
-
-typedef enum {
-  NO_DATA,
-  RX_RECEIVED
-} nRF24_RX_Status;
-
-nRF24_RX_Status RECEIVED_DATA(uint8_t *buffer, uint8_t *length) {   // this function checks for latest rx data and loads it into buffer and sets status.
-    if (nRF24_GetStatus_RXFIFO() != nRF24_STATUS_RXFIFO_EMPTY) {
-        nRF24_ReadPayload(buffer, length);
-        nRF24_ClearIRQFlags();
-        return RX_RECEIVED;
-    }
-    return NO_DATA;
-}
-
-void nRF24_Switch_to_TX_mode(){
-	 nRF24_SetOperationalMode(nRF24_MODE_TX);
-	 nRF24_CE_H();
-	 HAL_Delay(1);// TX_15us_delay() // Needs to be at least 10 μs
-};
-
-
-
-void nRF24_start_sending(uint8_t *data, uint8_t length) {
-        nRF24_FlushTX();
-        nRF24_ClearIRQFlags();
-        nRF24_WritePayload(data, length);
-        nRF24_Switch_to_TX_mode();
-    }
-
 
 
 /* USER CODE END 4 */

@@ -135,14 +135,16 @@ void setup() {
   Serial.println("Listening started.");
   Serial.println("Radio initialized and listening.");
   printRadioRegisters();
-  // Sync_with_Ground_station(); // WAITS TO FOR HAND SHAKE TO SYNC CLOCK WITH GROUND STATION
+ // Sync_with_Ground_station(); // WAITS TO FOR HAND SHAKE TO SYNC CLOCK WITH GROUND STATION
 }
 
 
 unsigned long mode_timer = millis();
 void loop() {
- 
- unsigned long current_time = millis();
+ radio.stopListening();
+ sending_data("1111");
+delay(500);
+ /*unsigned long current_time = millis();
   unsigned long elapsed = current_time - mode_timer;
   radio.startListening();
     if (radio.available()) {
@@ -150,7 +152,7 @@ void loop() {
       radio.read(&text, 32);
       text[32] = '\0';
       Serial.print("rec:");
-      Serial.println(text);}
+      Serial.println(text);}*/
  /* if(elapsed<400){
     //Serial.println("mode 1");
     radio.startListening();

@@ -236,6 +236,8 @@ uint8_t nRF24_GetRXSource(void);
 uint8_t nRF24_GetRetransmitCounters(void);
 uint8_t nRF24_GetFeatures(void);
 
+
+void nRF24_WriteReg(uint8_t reg, uint8_t value);
 void nRF24_ResetPLOS(void);
 void nRF24_FlushTX(void);
 void nRF24_FlushRX(void);
@@ -248,7 +250,5 @@ nRF24_RXResult nRF24_ReadPayloadDpl(uint8_t *pBuf, uint8_t *length);
 
 #define nRF24_RX_ON()   nRF24_CE_H();
 #define nRF24_RX_OFF()  nRF24_CE_L();
-
-
 
 #endif // __NRF24_H

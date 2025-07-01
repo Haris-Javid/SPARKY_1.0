@@ -2,7 +2,7 @@
 ../Core/Inc/support.h:35:20:nRF24_CSN_H	1
 ../Core/Inc/support.h:40:23:nRF24_LL_RW	2
 ../Core/Src/nrf24.c:18:16:nRF24_ReadReg	1
-../Core/Src/nrf24.c:33:13:nRF24_WriteReg	6
+../Core/Src/nrf24.c:33:6:nRF24_WriteReg	6
 ../Core/Src/nrf24.c:56:13:nRF24_ReadMBReg	2
 ../Core/Src/nrf24.c:70:13:nRF24_WriteMBReg	2
 ../Core/Src/nrf24.c:81:6:nRF24_Init	1

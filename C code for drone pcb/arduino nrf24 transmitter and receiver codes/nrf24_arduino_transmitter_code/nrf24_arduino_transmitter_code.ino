@@ -109,13 +109,24 @@ RF24 radio(7,8); // CE, CSN
 const uint8_t address[5] = {'D', 'R', 'O', 'N', 'E'};
 
 void setup() {
-  Serial.begin(9600);
+Serial.begin(9600);
+  SPI.begin();
   radio.begin();
+  radio.setAddressWidth(5);
+  radio.setAutoAck(true); 
+  radio.setPayloadSize(10);  // Match STM32's payload size
+  radio.setRetries(5, 5);   // 5 retries, 1500µs delay (0x15)
+  radio.setAutoAck(0, true);  // Enable AA only on pipe 0
+  radio.setAutoAck(1, false); // Disable on other pipes
+  radio.setAutoAck(2, false); // Disable on other pipes
+  radio.setAutoAck(3, false); // Disable on other pipes
+  radio.setAutoAck(4, false); // Disable on other pipes
+  radio.setAutoAck(5, false); // Disable on other pipes
   radio.openWritingPipe(address);
   radio.openReadingPipe(0, address);  // Pipe 0 must match TX_ADDR from STM32
   radio.setPALevel(RF24_PA_MAX);
   radio.setDataRate(RF24_1MBPS);
-  radio.setChannel(76);
+  radio.setChannel(78);
   radio.setCRCLength(RF24_CRC_16);
   radio.stopListening();
 
@@ -131,12 +142,16 @@ if (!radio.isChipConnected()) {
   Serial.println("Radio initialized and transmiting.");
   printRadioRegisters();
   delay(1000);
-  Sync_with_drone();
+  //Sync_with_drone();
 }
 
 unsigned long mode_timer = millis();
 void loop() {
-  unsigned long current_time = millis();
+  
+  radio.stopListening();
+  sending_data("hi drone");
+  delay(500);
+  /*unsigned long current_time = millis();
   unsigned long elapsed = current_time - mode_timer;
 
   if(elapsed<400){
@@ -157,7 +172,7 @@ void loop() {
   
   else{
     mode_timer =current_time;
-  }
+  }*/
 }
 
 
@@ -236,7 +251,7 @@ void sending_data(const char* da){
   radio.stopListening();  
   char text[32];
   strcpy(text, da);  // Copy the input into a local 32-byte buffer
-  bool result = radio.write(&text, sizeof(text));
+  bool result = radio.write(&text,sizeof(text));
   
 
 }

@@ -1,21 +1,97 @@
-18:10:00 **** Incremental Build of configuration Release for project SPI TEST ****
+04:25:55 **** Incremental Build of configuration Release for project SPI TEST ****
 make -j16 all 
 arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -DUSE_HAL_DRIVER -DSTM32L476xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
 ../Core/Src/main.c: In function 'main':
-../Core/Src/main.c:159:18: warning: unused variable 'status' [-Wunused-variable]
-  159 |          uint8_t status = nRF24_GetStatus();
-      |                  ^~~~~~
-../Core/Src/main.c:121:11: warning: variable 'received_SPI_data' set but not used [-Wunused-but-set-variable]
-  121 |   uint8_t received_SPI_data[12]= {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
-      |           ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:140:12: warning: variable 'received_SPI_data' set but not used [-Wunused-but-set-variable]
+  140 |    uint8_t received_SPI_data[13]= {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+      |            ^~~~~~~~~~~~~~~~~
 arm-none-eabi-gcc -o "SPI TEST.elf" @"objects.list"   -mcpu=cortex-m4 -T"D:\STM32 CUBE IDE\STM32L476G-DISCO\SPI TEST\STM32L476VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SPI TEST.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: SPI TEST.elf
  
 arm-none-eabi-size  SPI\ TEST.elf 
 arm-none-eabi-objdump -h -S SPI\ TEST.elf  > "SPI TEST.list"
    text	   data	    bss	    dec	    hex	filename
-   6624	     12	   1668	   8304	   2070	SPI TEST.elf
+   7112	     12	   1668	   8792	   2258	SPI TEST.elf
 Finished building: default.size.stdout
  
 Finished building: SPI TEST.list
+ 
+04:25:58 **** Incremental Build of configuration Debug for project SPI TEST ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L476xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:140:12: warning: variable 'received_SPI_data' set but not used [-Wunused-but-set-variable]
+  140 |    uint8_t received_SPI_data[13]= {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+      |            ^~~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "SPI TEST.elf" @"objects.list"   -mcpu=cortex-m4 -T"D:\STM32 CUBE IDE\STM32L476G-DISCO\SPI TEST\STM32L476VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SPI TEST.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: SPI TEST.elf
+ 
+arm-none-eabi-size  SPI\ TEST.elf 
+arm-none-eabi-objdump -h -S SPI\ TEST.elf  > "SPI TEST.list"
+   text	   data	    bss	    dec	    hex	filename
+  11592	     12	   1668	  13272	   33d8	SPI TEST.elf
+Finished building: default.size.stdout
+ 
+Finished building: SPI TEST.list
+ 
+04:42:26 **** Incremental Build of configuration Debug for project SPI TEST ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L476xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:140:12: warning: variable 'received_SPI_data' set but not used [-Wunused-but-set-variable]
+  140 |    uint8_t received_SPI_data[13]= {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+      |            ^~~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "SPI TEST.elf" @"objects.list"   -mcpu=cortex-m4 -T"D:\STM32 CUBE IDE\STM32L476G-DISCO\SPI TEST\STM32L476VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SPI TEST.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: SPI TEST.elf
+ 
+arm-none-eabi-size  SPI\ TEST.elf 
+arm-none-eabi-objdump -h -S SPI\ TEST.elf  > "SPI TEST.list"
+   text	   data	    bss	    dec	    hex	filename
+  11596	     12	   1668	  13276	   33dc	SPI TEST.elf
+Finished building: default.size.stdout
+ 
+Finished building: SPI TEST.list
+ 
+04:45:20 **** Incremental Build of configuration Debug for project SPI TEST ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L476xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:140:12: warning: variable 'received_SPI_data' set but not used [-Wunused-but-set-variable]
+  140 |    uint8_t received_SPI_data[13]= {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+      |            ^~~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "SPI TEST.elf" @"objects.list"   -mcpu=cortex-m4 -T"D:\STM32 CUBE IDE\STM32L476G-DISCO\SPI TEST\STM32L476VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SPI TEST.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: SPI TEST.elf
+ 
+arm-none-eabi-size  SPI\ TEST.elf 
+arm-none-eabi-objdump -h -S SPI\ TEST.elf  > "SPI TEST.list"
+   text	   data	    bss	    dec	    hex	filename
+  11596	     12	   1668	  13276	   33dc	SPI TEST.elf
+Finished building: default.size.stdout
+ 
+Finished building: SPI TEST.list
+ 
+04:51:37 **** Incremental Build of configuration Debug for project SPI TEST ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L476xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:140:12: warning: variable 'received_SPI_data' set but not used [-Wunused-but-set-variable]
+  140 |    uint8_t received_SPI_data[13]= {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+      |            ^~~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "SPI TEST.elf" @"objects.list"   -mcpu=cortex-m4 -T"D:\STM32 CUBE IDE\STM32L476G-DISCO\SPI TEST\STM32L476VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SPI TEST.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: SPI TEST.elf
+ 
+arm-none-eabi-size  SPI\ TEST.elf 
+arm-none-eabi-objdump -h -S SPI\ TEST.elf  > "SPI TEST.list"
+   text	   data	    bss	    dec	    hex	filename
+  11596	     12	   1668	  13276	   33dc	SPI TEST.elf
+Finished building: default.size.stdout
+ 
+Finished building: SPI TEST.list
+ 
+04:52:13 **** Incremental Build of configuration Debug for project SPI TEST ****
+make -j16 all 
+arm-none-eabi-size  SPI\ TEST.elf 
+   text	   data	    bss	    dec	    hex	filename
+  11596	     12	   1668	  13276	   33dc	SPI TEST.elf
+Finished building: default.size.stdout
  
