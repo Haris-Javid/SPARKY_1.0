@@ -22,7 +22,7 @@ void nRF24_Switch_to_RX_mode();
 
 // Checks if data has been received in the RX FIFO.
 // If data is available, it updates the provided buffer and length, and returns RX_RECEIVED or NO_DATA.
-nRF24_RX_Status RECEIVED_DATA(uint8_t *buffer, uint8_t *length);
+nRF24_RX_Status RECEIVED_DATA(uint8_t *buffer, uint8_t length);
 
 // Sends a data packet using the nRF24L01+ module.
 void nRF24_start_sending(uint8_t *data, uint8_t length);

@@ -6,23 +6,23 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="nRF24_CMD_R_RX_PAYLOAD"/>
+		<item key="selection" value="nRF24_WritePayload"/>
 		<list key="findhistory">
-			<item value="nRF24_CMD_R_RX_PAYLOAD"/>
-			<item value=" nRF24_ReadPayload"/>
-			<item value="nRF24_STATUS_RXFIFO_DATA"/>
-			<item value="nRF24_STATUS_RXFIFO_EMPTY"/>
-			<item value="nRF24_MASK_RXFIFO"/>
-			<item value="nRF24_GetStatus_RXFIFO()"/>
-			<item value="nRF24_LL_RW"/>
-			<item value="nRF24_CMD_NOP"/>
-			<item value="nRF24_MASK_REG_MAP"/>
-			<item value="mode"/>
-			<item value="nRF24_CONFIG_PRIM_RX"/>
-			<item value="nRF24_SetOperationalMode"/>
-			<item value="nRF24_Switch_to_RX_mode()"/>
+			<item value="nRF24_WritePayload"/>
+			<item value="start_sending"/>
+			<item value="transmit"/>
+			<item value="trans"/>
+			<item value="trasnmit"/>
 			<item value="nRF24_ReadPayload"/>
-			<item value="TIM5_IRQHandler(void)"/>
+			<item value="  nRF24_ReadPayload"/>
+			<item value="nRF24_ARD_1500us"/>
+			<item value=" HAL_GPIO_TogglePin(RED_LED_GPIO_Port, RED_LED_Pin);"/>
+			<item value="nRF24_SetOperationalMode"/>
+			<item value="nRF24_SetOperationalMode()"/>
+			<item value="count"/>
+			<item value="main"/>
+			<item value="nRF24_MASK_REG_MAP"/>
+			<item value="nRF24_ClearIRQFlags"/>
 		</list>
 		<list key="replacehistory">
 			<item value="SPI_CSN_Pin"/>
@@ -32,8 +32,8 @@
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item key="DIALOG_X_ORIGIN" value="2542"/>
-		<item key="DIALOG_Y_ORIGIN" value="166"/>
+		<item key="DIALOG_X_ORIGIN" value="1035"/>
+		<item key="DIALOG_Y_ORIGIN" value="275"/>
 		<item key="DIALOG_WIDTH" value="893"/>
 		<item key="DIALOG_HEIGHT" value="580"/>
 		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>

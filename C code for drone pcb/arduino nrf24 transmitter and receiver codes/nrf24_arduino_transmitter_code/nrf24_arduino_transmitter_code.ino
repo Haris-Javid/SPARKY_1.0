@@ -4,7 +4,6 @@
 
 
 #include <stdint.h>
-void sending_data(const char* da);
 // nRF24L01 SPI commands
 #define R_REGISTER    0x00
 #define W_REGISTER    0x20
@@ -114,8 +113,8 @@ Serial.begin(9600);
   radio.begin();
   radio.setAddressWidth(5);
   radio.setAutoAck(true); 
-  radio.setPayloadSize(10);  // Match STM32's payload size
-  radio.setRetries(5, 5);   // 5 retries, 1500µs delay (0x15)
+  radio.setPayloadSize(4);  // Match STM32's payload size
+  radio.setRetries(1, 1);   // 5 retries, 1500µs delay (0x15)
   radio.setAutoAck(0, true);  // Enable AA only on pipe 0
   radio.setAutoAck(1, false); // Disable on other pipes
   radio.setAutoAck(2, false); // Disable on other pipes
@@ -142,120 +141,54 @@ if (!radio.isChipConnected()) {
   Serial.println("Radio initialized and transmiting.");
   printRadioRegisters();
   delay(1000);
-  //Sync_with_drone();
 }
 
 unsigned long mode_timer = millis();
-void loop() {
-  
-  radio.stopListening();
-  sending_data("hi drone");
-  delay(500);
-  /*unsigned long current_time = millis();
-  unsigned long elapsed = current_time - mode_timer;
 
-  if(elapsed<400){
-   // Serial.println("mode 1");
-    sending_data("123,200,50,89");
-  
+void loop() {
+
+  if(millis()-mode_timer<=180){
+ uint8_t pwm_data1[4] = {0b1100100,0b1100100,0b1100100,0b0};
+  sending_data(pwm_data1);
   }
-  else if (elapsed<500){
-  //Serial.println("mode 2");
-  radio.startListening();
-  if (radio.available()) {
-   char text[33] = {0};
-   radio.read(&text, 32);
-   text[32] = '\0';
-   Serial.println("rec telemerty data: ");
-   Serial.println(text);}
-   }
-  
+  else if(millis()-mode_timer<=210){
+  uint8_t pwm_data2[4] = {0b1100100,0b1100100,0b1100100,0b1};
+  sending_data(pwm_data2);}
+
+
+  else if(millis()-mode_timer<=250){
+  receiver_mode();}
   else{
-    mode_timer =current_time;
-  }*/
+    mode_timer = millis();
+  Serial.println("-----------------");
+  }
+
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////
 
-bool isSynchronized = false; // sync flag 
+void sending_data(const uint8_t* da){
+  radio.stopListening();  
+  bool result = radio.write(da,4);}
 
-void Sync_with_drone() {// THIS FUNCTION WILL SEND ITS RUN TIME CLOCK TIME STAMP TO DRONE AND IF DRONE CAN SEND VALUE BACK WITH +- 0.1 SEC ERROR, CONNECTION GOOD.  
-  while (!isSynchronized) {
-    // 🟢 Step 1: Reset local clock
-    cli();
-    timer0_millis = 0;
-    sei();
-
-    // 🟢 Step 2: Send "sync" message
-    const char buffer[] = "sync";
-    radio.stopListening();
-    radio.write(&buffer, strlen(buffer));
-    radio.startListening();
-
-    // 🟢 Step 3: Wait for drone's reply
-    unsigned long start = millis();
-    while (millis() - start < 200) {
-      if (radio.available()) {
-        char text[33] = {0};
-        radio.read(&text, sizeof(text) - 1);
-
-        Serial.print("Received: ");
-        Serial.println(text);
-
-        unsigned long drone_time = strtoul(text, NULL, 10);
-        unsigned long ground_time = millis();
-        long diff = (long)drone_time - (long)ground_time;
-
-        Serial.print("Drone Time: ");
-        Serial.println(drone_time);
-        Serial.print("Ground Time: ");
-        Serial.println(ground_time);
-        Serial.print("Diff (ms): ");
-        Serial.println(diff);
-
-        if (abs(diff) <= 10) {
-          Serial.println("✅ Clocks synchronized! Sending confirm...");
-
-          // 🟢 Send "confirm" message
-          delay(5);  // small wait for drone to switch to RX
-          radio.stopListening();
-          const char confirm_msg[] = "confirm";
-          bool success = radio.write(&confirm_msg, strlen(confirm_msg));
-          radio.startListening();
-
-          if (success) {
-            Serial.println("Confirmation sent.");
-            isSynchronized = true;
-          } else {
-            Serial.println("Failed to send confirmation.");
-          }
-        } else {
-          Serial.println("❌ Time difference too high.");
-        }
-        break;
-      }
-    }
-
-    if (!isSynchronized) {
-      Serial.println("No valid response. Retrying...\n");
-      delay(200);
-    }
-  }
-}
-
-
-///////////////////////////////////////////////////////////////////////////////////
-
-void sending_data(const char* da){
+void sending_data_char(const char* da){
   radio.stopListening();  
   char text[32];
   strcpy(text, da);  // Copy the input into a local 32-byte buffer
-  bool result = radio.write(&text,sizeof(text));
-  
+  bool result = radio.write(&text, sizeof(text));
 
 }
 
+void receiver_mode(){
+   radio.startListening();
+    if (radio.available()) {
+  uint8_t fromedrone[8];
+  radio.read(fromedrone, 4);
+  uint32_t number = 0;
+  memcpy(&number, fromedrone, 4);
+  Serial.println(number);
+}}
 
+// "pwm_1[0-3],pwm_2[4-6],pwm_3[7-9],_pwm_4[10-12],1(bit to tell drone to trasnmite)"
 
-// "masterclock[0-7],pwm_1[8-10],pwm_2[11-13],pwm_3[14-16],_pwm_4[17-19]"

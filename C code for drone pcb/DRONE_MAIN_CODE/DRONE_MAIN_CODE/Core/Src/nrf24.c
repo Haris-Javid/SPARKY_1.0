@@ -15,7 +15,7 @@
 // input:
 //   reg - number of register to read
 // return: value of register
-static uint8_t nRF24_ReadReg(uint8_t reg) {
+uint8_t nRF24_ReadReg(uint8_t reg) {
 	uint8_t value;
 
 	nRF24_CSN_L();

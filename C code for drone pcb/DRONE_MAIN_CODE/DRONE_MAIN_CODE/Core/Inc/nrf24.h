@@ -238,6 +238,7 @@ uint8_t nRF24_GetFeatures(void);
 
 
 void nRF24_WriteReg(uint8_t reg, uint8_t value);
+uint8_t nRF24_ReadReg(uint8_t reg);
 void nRF24_ResetPLOS(void);
 void nRF24_FlushTX(void);
 void nRF24_FlushRX(void);

@@ -141,10 +141,10 @@ void setup() {
 
 unsigned long mode_timer = millis();
 void loop() {
- radio.stopListening();
+ /*radio.stopListening();
  sending_data("1111");
-delay(500);
- /*unsigned long current_time = millis();
+delay(500);*/
+ unsigned long current_time = millis();
   unsigned long elapsed = current_time - mode_timer;
   radio.startListening();
     if (radio.available()) {
@@ -153,7 +153,7 @@ delay(500);
       text[32] = '\0';
       Serial.print("rec:");
       Serial.println(text);}*/
- /* if(elapsed<400){
+    if(elapsed<400){
     //Serial.println("mode 1");
     radio.startListening();
     if (radio.available()) {
@@ -170,7 +170,7 @@ delay(500);
   }
   else{
     mode_timer =current_time;
-  }*/
+  }
 
 }
 

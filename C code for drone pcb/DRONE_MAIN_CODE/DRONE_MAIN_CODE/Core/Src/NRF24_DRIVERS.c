@@ -64,13 +64,15 @@ void nRF24_set_up(uint8_t width, uint8_t channel, uint8_t data_rate, uint8_t pow
 
 
 void nRF24_Switch_to_RX_mode(){      // set nrf24 into rx mode
+	 nRF24_CE_L();
 	 nRF24_SetOperationalMode(nRF24_MODE_RX);
 	 nRF24_FlushRX();
 	 nRF24_CE_H();
+	 HAL_Delay(1);
 };
 
 
-nRF24_RX_Status RECEIVED_DATA(uint8_t *buffer, uint8_t *length) {   // this function checks for latest rx data and loads it into buffer and sets status.
+nRF24_RX_Status RECEIVED_DATA(uint8_t *buffer, uint8_t length) {   // this function checks for latest rx data and loads it into buffer and sets status.
     if (nRF24_GetStatus_RXFIFO() != nRF24_STATUS_RXFIFO_EMPTY) {
         nRF24_ReadPayload(buffer, length);
         nRF24_ClearIRQFlags();
@@ -80,6 +82,7 @@ nRF24_RX_Status RECEIVED_DATA(uint8_t *buffer, uint8_t *length) {   // this func
 }
 
 void nRF24_Switch_to_TX_mode(){
+	 nRF24_CE_L();
 	 nRF24_SetOperationalMode(nRF24_MODE_TX);
 	 nRF24_CE_H();
 	 HAL_Delay(1);// TX_15us_delay() // Needs to be at least 10 μs
@@ -91,7 +94,10 @@ void nRF24_start_sending(uint8_t *data, uint8_t length) {
         nRF24_FlushTX();
         nRF24_ClearIRQFlags();
         nRF24_WritePayload(data, length);
-        nRF24_Switch_to_TX_mode();
+        nRF24_CE_H();
+        HAL_Delay(1);
+        nRF24_CE_L();
+
     }
 
 

@@ -1,0 +1,129 @@
+/*
+ * NRF24_DRIVERS.c
+ *
+ *  Created on: Jul 1, 2025
+ *      Author: haris
+ */
+#include "main.h"
+#include "nrf24.h"
+#include "NRF24_DRIVERS.h"
+
+
+void nRF24_set_up(uint8_t width, uint8_t channel, uint8_t data_rate, uint8_t power_level, uint8_t CRC_mode, uint8_t delay, uint8_t attempts, uint8_t rx_pipe, uint8_t *addr, uint8_t AA_state, uint8_t payload_size)
+{
+    // Set the address width (3, 4, or 5 bytes)
+    nRF24_SetAddrWidth(width); // Recommended: 5-byte address width
+
+    // Set the RF channel for communication (channel 0-125)
+    nRF24_SetRFChannel(channel); // Set the channel (0-125)
+
+    // Set the data rate (250kbps, 1Mbps, or 2Mbps)
+    nRF24_SetDataRate(data_rate); // Set the data rate
+
+    // Set the TX power level (available options depend on module, usually -18dBm to +3dBm)
+    nRF24_SetTXPower(power_level); // Set the transmission power level
+
+    // Set CRC mode (disable, 1-byte CRC, or 2-byte CRC)
+    nRF24_SetCRCScheme(CRC_mode); // Set CRC scheme (disabled, CRC-1, or CRC-2)
+
+    // Set auto-retransmit delay (ARD) and attempts (ARC)
+    nRF24_SetAutoRetr(delay, attempts); // Configure retransmit delay and number of attempts (0-15)
+
+    // Set the TX pipe address (used for transmission)
+    nRF24_SetTXAddr(addr); // Set the TX pipe address
+
+    // Set the RX pipe address (must match the TX address for auto acknowledgment)
+    uint8_t addr_RX[5];
+    addr_RX[0]= addr[4];
+    addr_RX[1]= addr[3];
+    addr_RX[2]= addr[2];
+    addr_RX[3]= addr[1];
+    addr_RX[4]= addr[0];
+
+    nRF24_SetAddr(rx_pipe, addr_RX); // Set the RX pipe address (should match TX address)
+
+    // Enable AA (Auto Acknowledgment) for the specified RX pipe
+    nRF24_EnableAA(rx_pipe); // Enable AA on the given RX pipe (0-5)
+
+    // Set the RX pipe with AA state (enabled/disabled) and payload size (1-32 bytes)
+    nRF24_SetRXPipe(rx_pipe, AA_state, payload_size); // Configure RX pipe with AA and payload size
+
+    nRF24_DisableAA(nRF24_PIPE1);
+
+    nRF24_DisableAA(nRF24_PIPE2);
+
+  	nRF24_DisableAA(nRF24_PIPE3);
+
+    nRF24_DisableAA(nRF24_PIPE4);
+
+    nRF24_DisableAA(nRF24_PIPE5);
+
+    nRF24_SetPowerMode(nRF24_PWR_UP); // powering up module so that it can stay in standby-1 mode
+    HAL_Delay(1);
+    }
+
+
+void nRF24_Switch_to_RX_mode(){      // set nrf24 into rx mode
+	 nRF24_SetOperationalMode(nRF24_MODE_RX);
+	 nRF24_FlushRX();
+	 nRF24_CE_H();
+};
+
+
+nRF24_RX_Status RECEIVED_DATA(uint8_t *buffer, uint8_t *length) {   // this function checks for latest rx data and loads it into buffer and sets status.
+    if (nRF24_GetStatus_RXFIFO() != nRF24_STATUS_RXFIFO_EMPTY) {
+        nRF24_ReadPayload(buffer, length);
+        nRF24_ClearIRQFlags();
+        return RX_RECEIVED;
+    }
+    return NO_DATA;
+}
+
+void nRF24_Switch_to_TX_mode(){
+	 nRF24_SetOperationalMode(nRF24_MODE_TX);
+	// nRF24_CE_H();
+	 //HAL_Delay(1);// TX_15us_delay() // Needs to be at least 10 μs
+};
+
+
+
+void nRF24_start_sending(uint8_t *data, uint8_t length) {
+        nRF24_FlushTX();
+        nRF24_ClearIRQFlags();
+        nRF24_WritePayload(data, length);
+        nRF24_Switch_to_TX_mode();
+        nRF24_CE_H();
+        HAL_Delay(1);
+        nRF24_CE_L();
+    }
+
+
+
+void get_nrf24_reg_values(uint8_t *output_buffer){
+	  uint8_t send_SPI_data[13] =  {
+	 		    0x00, // CONFIG
+	 		    0x01, // EN_AA
+	 		    0x02, // EN_RXADDR
+	 		    0x03, // SETUP_AW
+	 		    0x04, // SETUP_RETR
+	 		    0x05, // RF_CH
+	 		    0x06, // RF_SETUP
+	 		    0x07, // STATUS
+	 		    0x08, // OBSERVE_TX
+	 		    0x09, // RPD
+	 		    0x0A, // RX_ADDR_P0 (first byte)
+	 		    0x10, // TX_ADDR (first byte)
+				0x17 // fifo status
+	 			};
+
+	   for(int x=0; x<13;x++){
+	             uint8_t tx_buf[2] = { send_SPI_data[x], 0xFF };  // Command and dummy byte
+	             uint8_t rx_buf[2] = {0};
+	             nRF24_CSN_L();
+	             HAL_Delay(1);
+	             HAL_SPI_TransmitReceive(&hspi1, tx_buf, rx_buf, 2, 200);
+	         	 nRF24_CSN_H();
+	         	 output_buffer[x] = rx_buf[1];
+	         }
+}
+

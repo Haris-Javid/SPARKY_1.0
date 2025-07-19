@@ -23,6 +23,10 @@
 /* USER CODE BEGIN Includes */
 #include "nrf24.h"
 #include "NRF24_DRIVERS.h"
+#include <string.h>
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdlib.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,6 +49,7 @@ SPI_HandleTypeDef hspi1;
 
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
+TIM_HandleTypeDef htim4;
 TIM_HandleTypeDef htim5;
 
 /* USER CODE BEGIN PV */
@@ -58,13 +63,17 @@ static void MX_SPI1_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_TIM5_Init(void);
+static void MX_TIM4_Init(void);
 /* USER CODE BEGIN PFP */
+void Sync_receiver_mode(void);
+void Sync_with_Ground_station();
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 volatile uint32_t count = 0;
+bool isSynchronized = false;
 /* USER CODE END 0 */
 
 /**
@@ -100,57 +109,57 @@ int main(void)
   MX_TIM2_Init();
   MX_TIM1_Init();
   MX_TIM5_Init();
+  MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
 
   HAL_TIM_Base_Start_IT(&htim5); // start timer 5
 
   uint8_t addr[5] = {'D', 'R', 'O', 'N', 'E'};
-  nRF24_set_up(5, 78, nRF24_DR_1Mbps, nRF24_TXPWR_0dBm, nRF24_CRC_2byte, nRF24_ARD_1500us, 5 , nRF24_PIPE0, addr,nRF24_AA_ON  , 10);
+  nRF24_set_up(5, 78, nRF24_DR_1Mbps, nRF24_TXPWR_0dBm, nRF24_CRC_2byte, nRF24_ARD_250us , 1 , nRF24_PIPE0, addr,nRF24_AA_ON  , 4);
 
 
-   uint8_t received_SPI_data[13]= {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+  uint8_t received_SPI_data[13]= {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 
-   uint8_t buffer_rec[32];
-   uint8_t length = 10;
-  nRF24_Switch_to_RX_mode();
-  //  uint8_t test_data[]= "hi this is drone";
-  // nRF24_start_sending(test_data, 10);
+   //uint8_t test_data[]= "hi this is drone";
    nRF24_ClearIRQFlags(); // Properly clear interrupts
-   RECEIVED_DATA(buffer_rec, &length);
+
+  // uint8_t time_buffer[10];
+  // uint8_t time_length = 10;
 
 
-    uint32_t now_seconds = 0;
-    uint32_t next_seconds = 0;
-    char time_str[9];
+
+   uint8_t buffer_rec[4];
+   uint8_t length = 4;
+   uint8_t send_buffer[4]= {0b1100100,0b1100100,0b1100100,0b0};
+   uint8_t rx_tx_flag=0b0;
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  // nRF24_Switch_to_RX_mode();
+   nRF24_Switch_to_TX_mode();
+    uint16_t number=0;
   while (1)
   {
 
-	   get_nrf24_reg_values(received_SPI_data);
+	  	nRF24_Switch_to_RX_mode();
+  	    RECEIVED_DATA(buffer_rec, length);
+  	    nRF24_FlushRX();
+  	    number=number+buffer_rec[0]+buffer_rec[1];
+	    HAL_GPIO_TogglePin(RED_LED_GPIO_Port, RED_LED_Pin);
 
-	 // nRF24_start_sending(test_data, 10);
-	 	   HAL_Delay(1);
-	 	   if(RECEIVED_DATA(buffer_rec, &length) == RX_RECEIVED){
-	 	   		  HAL_GPIO_TogglePin(RED_LED_GPIO_Port, RED_LED_Pin);
-	 	   	  }
-	 now_seconds = 0;
-
+	    rx_tx_flag=buffer_rec[3];
 
 
+	  	if(rx_tx_flag==0b1){
+	  		uint32_t mode=count;
+			nRF24_Switch_to_TX_mode();
+	  		while(count-mode<41){
+	  				nRF24_start_sending(&count,length);}
+	    }
 
-	// HAL_GPIO_TogglePin(RED_LED_GPIO_Port, RED_LED_Pin); // Toggle the LED
 
-	 //sprintf(time_str, "%02lu:", count/20000);
-	 //nRF24_start_sending(test_data, 10);
-	// HAL_Delay(500); // Delay 500 ms
-    // nRF24_start_sending(time_str, 10);
-
-
-	 HAL_Delay(500); // Delay 500 ms
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -328,6 +337,51 @@ static void MX_TIM2_Init(void)
 }
 
 /**
+  * @brief TIM4 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM4_Init(void)
+{
+
+  /* USER CODE BEGIN TIM4_Init 0 */
+
+  /* USER CODE END TIM4_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM4_Init 1 */
+
+  /* USER CODE END TIM4_Init 1 */
+  htim4.Instance = TIM4;
+  htim4.Init.Prescaler = 0;
+  htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim4.Init.Period = 65535;
+  htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim4, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim4, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM4_Init 2 */
+
+  /* USER CODE END TIM4_Init 2 */
+
+}
+
+/**
   * @brief TIM5 Initialization Function
   * @param None
   * @retval None
@@ -346,9 +400,9 @@ static void MX_TIM5_Init(void)
 
   /* USER CODE END TIM5_Init 1 */
   htim5.Instance = TIM5;
-  htim5.Init.Prescaler = 1;
+  htim5.Init.Prescaler = 249;
   htim5.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim5.Init.Period = 624;
+  htim5.Init.Period = 99;
   htim5.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim5.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim5) != HAL_OK)
@@ -418,14 +472,18 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
-
+uint32_t last_check = 0;
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
 	if (htim->Instance == TIM5){
 		count ++;
-	}
+		/*if(count-last_check>=1000){
+			count-=3;
+			last_check=count;
+		}*/
+}}
 
-}
+
 
 
 /* USER CODE END 4 */

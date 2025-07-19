@@ -1,7 +1,7 @@
 ../Core/Inc/support.h:31:20:nRF24_CSN_L	8	static
 ../Core/Inc/support.h:35:20:nRF24_CSN_H	8	static
 ../Core/Inc/support.h:40:23:nRF24_LL_RW	32	static
-../Core/Src/nrf24.c:18:16:nRF24_ReadReg	24	static
+../Core/Src/nrf24.c:18:9:nRF24_ReadReg	24	static
 ../Core/Src/nrf24.c:33:6:nRF24_WriteReg	16	static
 ../Core/Src/nrf24.c:56:13:nRF24_ReadMBReg	24	static
 ../Core/Src/nrf24.c:70:13:nRF24_WriteMBReg	16	static

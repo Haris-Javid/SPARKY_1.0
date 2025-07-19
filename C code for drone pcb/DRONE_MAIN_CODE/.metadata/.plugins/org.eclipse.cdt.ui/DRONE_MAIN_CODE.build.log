@@ -1,27 +1,33 @@
-04:14:14 **** Incremental Build of configuration Debug for project DRONE_MAIN_CODE ****
+19:12:57 **** Incremental Build of configuration Debug for project DRONE_MAIN_CODE ****
 make -j16 all 
 arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F411xE -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
 ../Core/Src/main.c: In function 'main':
-../Core/Src/main.c:124:10: warning: unused variable 'time_str' [-Wunused-variable]
-  124 |     char time_str[9];
-      |          ^~~~~~~~
-../Core/Src/main.c:123:14: warning: unused variable 'next_seconds' [-Wunused-variable]
-  123 |     uint32_t next_seconds = 0;
-      |              ^~~~~~~~~~~~
-../Core/Src/main.c:122:14: warning: variable 'now_seconds' set but not used [-Wunused-but-set-variable]
-  122 |     uint32_t now_seconds = 0;
-      |              ^~~~~~~~~~~
+../Core/Src/main.c:159:61: warning: passing argument 1 of 'nRF24_start_sending' from incompatible pointer type [-Wincompatible-pointer-types]
+  159 |                                         nRF24_start_sending(&count,length);}
+      |                                                             ^~~~~~
+      |                                                             |
+      |                                                             volatile uint32_t * {aka volatile long unsigned int *}
+In file included from ../Core/Src/main.c:25:
+../Core/Inc/NRF24_DRIVERS.h:28:35: note: expected 'uint8_t *' {aka 'unsigned char *'} but argument is of type 'volatile uint32_t *' {aka 'volatile long unsigned int *'}
+   28 | void nRF24_start_sending(uint8_t *data, uint8_t length);
+      |                          ~~~~~~~~~^~~~
+../Core/Src/main.c:133:12: warning: unused variable 'send_buffer' [-Wunused-variable]
+  133 |    uint8_t send_buffer[4]= {0b1100100,0b1100100,0b1100100,0b0};
+      |            ^~~~~~~~~~~
+../Core/Src/main.c:121:11: warning: unused variable 'received_SPI_data' [-Wunused-variable]
+  121 |   uint8_t received_SPI_data[13]= {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+      |           ^~~~~~~~~~~~~~~~~
 arm-none-eabi-gcc -o "DRONE_MAIN_CODE.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\haris\OneDrive\Desktop\DRONE PROJECT PCB\drone drivers\C code for drone pcb\DRONE_MAIN_CODE\DRONE_MAIN_CODE\STM32F411CEUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="DRONE_MAIN_CODE.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: DRONE_MAIN_CODE.elf
  
 arm-none-eabi-size  DRONE_MAIN_CODE.elf 
 arm-none-eabi-objdump -h -S DRONE_MAIN_CODE.elf  > "DRONE_MAIN_CODE.list"
    text	   data	    bss	    dec	    hex	filename
-  12944	     12	   1876	  14832	   39f0	DRONE_MAIN_CODE.elf
+  13232	     12	   1948	  15192	   3b58	DRONE_MAIN_CODE.elf
 Finished building: default.size.stdout
  
 Finished building: DRONE_MAIN_CODE.list
  
 
-04:14:15 Build Finished. 0 errors, 3 warnings. (took 1s.2ms)
+19:13:01 Build Finished. 0 errors, 3 warnings. (took 3s.851ms)
 
