@@ -5,7 +5,7 @@ STM32 BASED DRONE FLIGHT CONTROLLER
 <img src="https://github.com/user-attachments/assets/b36cc964-b575-4fdf-ae64-d7db82cce889" width="285">
 
 <img src="https://github.com/user-attachments/assets/9065804d-552e-499d-bf0a-607d8e42f1c3" width="300">
-<img src="https://github.com/user-attachments/assets/c216b574-9ff9-4cd1-9e73-eec270dfd407" width="300">
+<img src="pcb top.PNG" width="300">
 
 
 ## PCB POWER SUPPLY 
