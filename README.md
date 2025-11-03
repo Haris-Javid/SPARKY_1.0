@@ -1,11 +1,11 @@
 # SPRAKY1.0
 STM32 BASED DRONE FLIGHT CONTROLLER 
 
-<img src="https://github.com/user-attachments/assets/b2dcd65b-607d-4165-a58b-efb39a23741e" width="300">
-<img src="https://github.com/user-attachments/assets/b36cc964-b575-4fdf-ae64-d7db82cce889" width="285">
+<img src="pcb bottom.PNG" width="300">
+<img src="pcb top.PNG" width="285">
 
-<img src="https://github.com/user-attachments/assets/9065804d-552e-499d-bf0a-607d8e42f1c3" width="300">
-<img src="pcb top.PNG" width="300">
+<img src="c8317d2a-5baf-49f5-a613-42f0196d3ea2.jpg" width="300">
+<img src="8be18b68-0e60-4ace-bb43-a489d089dc53.jpg" width="300">
 
 
 ## PCB POWER SUPPLY 
