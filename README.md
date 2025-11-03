@@ -2,12 +2,12 @@
 STM32 BASED DRONE FLIGHT CONTROLLER 
 
 <div style="display: flex; gap: 10px;">
-  <img src="pcb bottom.PNG" width="250">
-  <img src="pcb top.PNG" width="250">
+  <img src="IMAGES/pcb bottom.PNG" width="250">
+  <img src="IMAGES/pcb top.PNG" width="250">
 </div>
 <div style="display: flex; gap: 10px;">
-<img src="c8317d2a-5baf-49f5-a613-42f0196d3ea2.jpg" width="250">
-<img src="8be18b68-0e60-4ace-bb43-a489d089dc53.jpg" width="250">
+<img src="IMAGES/c8317d2a-5baf-49f5-a613-42f0196d3ea2.jpg" width="250">
+<img src="IMAGES/8be18b68-0e60-4ace-bb43-a489d089dc53.jpg" width="250">
 </div>
 
 ## PCB POWER SUPPLY 
@@ -26,14 +26,14 @@ STM32 BASED DRONE FLIGHT CONTROLLER
 
 
 ### High Level Power Supply Schematic
-<img src="POWER SUPPLY SCHEMATIC.PNG">
+<img src="IMAGES/POWER SUPPLY SCHEMATIC.PNG">
 
 
 ## TYPICAL BRUSHED MOTOR CONTROLLER
 
 The STM32 GPIO port outputs a PWM signal to the GATE pin of the N-channel MOSFET, allowing it to switch on and off according to the PWM duty cycle. When the MOSFET is on, current flows from the M4_POS pin through the motor, into the M4_NEG pin, and passes through the MOSFET’s drain-to-source path to ground. A flyback diode is placed across the motor to suppress voltage spikes and block reverse current, ensuring safe energy dissipation when the motor spins without power. A 100 Ω resistor is connected in series with the GATE to limit the inrush current and reduce power usage. In contrast, a 5 kΩ pull-down resistor is connected to the PWM line to prevent unintended switching due to floating signals.
 
-<img src="MOTOR CONTROLLER.PNG">
+<img src="IMAGES/MOTOR CONTROLLER.PNG">
 
 ## nRF24L01
 
