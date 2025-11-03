@@ -26,14 +26,14 @@ STM32 BASED DRONE FLIGHT CONTROLLER
 
 
 ### High Level Power Supply Schematic
-![Image](https://github.com/user-attachments/assets/e67e70c4-7239-43a3-a4e8-4d791ccce274)
+<img src="POWER SUPPLY SCHEMATIC.PNG">
 
 
 ## TYPICAL BRUSHED MOTOR CONTROLLER
 
 The STM32 GPIO port outputs a PWM signal to the GATE pin of the N-channel MOSFET, allowing it to switch on and off according to the PWM duty cycle. When the MOSFET is on, current flows from the M4_POS pin through the motor, into the M4_NEG pin, and passes through the MOSFET’s drain-to-source path to ground. A flyback diode is placed across the motor to suppress voltage spikes and block reverse current, ensuring safe energy dissipation when the motor spins without power. A 100 Ω resistor is connected in series with the GATE to limit the inrush current and reduce power usage. In contrast, a 5 kΩ pull-down resistor is connected to the PWM line to prevent unintended switching due to floating signals.
 
-![Image](https://github.com/user-attachments/assets/b17fa8ce-dfe2-4bfa-8981-9aa05600d982)
+<img src="MOTOR CONTROLLER.PNG">
 
 ## nRF24L01
 
