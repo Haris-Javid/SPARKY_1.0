@@ -1,12 +1,14 @@
 # SPRAKY1.0
 STM32 BASED DRONE FLIGHT CONTROLLER 
 
-<img src="https://github.com/user-attachments/assets/b2dcd65b-607d-4165-a58b-efb39a23741e" width="300">
-<img src="https://github.com/user-attachments/assets/b36cc964-b575-4fdf-ae64-d7db82cce889" width="285">
-
-<img src="https://github.com/user-attachments/assets/9065804d-552e-499d-bf0a-607d8e42f1c3" width="300">
-<img src="https://github.com/user-attachments/assets/c216b574-9ff9-4cd1-9e73-eec270dfd407" width="300">
-
+<div style="display: flex; gap: 10px;">
+  <img src="IMAGES/pcb bottom.PNG" width="250">
+  <img src="IMAGES/pcb top.PNG" width="250">
+</div>
+<div style="display: flex; gap: 10px;">
+<img src="IMAGES/c8317d2a-5baf-49f5-a613-42f0196d3ea2.jpg" width="250">
+<img src="IMAGES/8be18b68-0e60-4ace-bb43-a489d089dc53.jpg" width="250">
+</div>
 
 ## PCB POWER SUPPLY 
 
@@ -24,14 +26,14 @@ STM32 BASED DRONE FLIGHT CONTROLLER
 
 
 ### High Level Power Supply Schematic
-![Image](https://github.com/user-attachments/assets/e67e70c4-7239-43a3-a4e8-4d791ccce274)
+<img src="IMAGES/POWER SUPPLY SCHEMATIC.PNG">
 
 
 ## TYPICAL BRUSHED MOTOR CONTROLLER
 
 The STM32 GPIO port outputs a PWM signal to the GATE pin of the N-channel MOSFET, allowing it to switch on and off according to the PWM duty cycle. When the MOSFET is on, current flows from the M4_POS pin through the motor, into the M4_NEG pin, and passes through the MOSFET’s drain-to-source path to ground. A flyback diode is placed across the motor to suppress voltage spikes and block reverse current, ensuring safe energy dissipation when the motor spins without power. A 100 Ω resistor is connected in series with the GATE to limit the inrush current and reduce power usage. In contrast, a 5 kΩ pull-down resistor is connected to the PWM line to prevent unintended switching due to floating signals.
 
-![Image](https://github.com/user-attachments/assets/b17fa8ce-dfe2-4bfa-8981-9aa05600d982)
+<img src="IMAGES/MOTOR CONTROLLER.PNG">
 
 ## nRF24L01
 
